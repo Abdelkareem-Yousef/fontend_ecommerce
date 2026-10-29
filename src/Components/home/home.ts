@@ -1,50 +1,44 @@
-import { Component } from '@angular/core';
-import { Slider } from '../slider/slider';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ChangeDetectorRef } from '@angular/core';
-interface product{
-    id:Number,
-    title:string
-    image:String,
-    description:string,
-    price:number,
-    category:String
-  }
+import { RouterLink } from '@angular/router';
+import { Slider } from '../slider/slider';
+import { ProductCard } from '../Product/product-card/product-card';
+import { Product } from '../Product/product-card/product.model';
 
 @Component({
   selector: 'app-home',
-  imports: [Slider],
+  imports: [Slider, ProductCard, RouterLink],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
 export class Home {
+  products: Product[] = [];
 
+  constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
-    id:product[]=[];
+  ngOnInit() {
+    this.get_product();
+  }
 
-  constructor(private x:HttpClient,private cdr:ChangeDetectorRef){}
-
-  get_product(){
-
-    this.x.get<product[]>("https://fakestoreapi.com/products").subscribe({
-      next:(result:any)=>{
-
-        this.id=result as product[];
+  get_product() {
+    this.http.get<Product[]>('https://fakestoreapi.com/products').subscribe({
+      next: (result) => {
+        this.products = result;
         this.cdr.detectChanges();
-        console.log("working")
-
       },
-      error:(error:any)=>{
-        console.log("error")
-      },
-      complete:()=>{
-        console.log("done")
-      }
-
+      error: (error) => console.log('error', error),
     });
   }
 
-  ngOnInit(){
-    this.get_product();
+  get men() {
+    return this.products.filter(p => p.category === "men's clothing").slice(0, 4);
+  }
+
+  get women() {
+    return this.products.filter(p => p.category === "women's clothing").slice(0, 4);
+  }
+
+  get tech() {
+    return this.products.filter(p => p.category === 'electronics').slice(0, 4);
   }
 }

@@ -5,6 +5,7 @@ import { About } from '../Components/about/about';
 import { Login } from '../Components/Sign/login/login';
 import { Register } from '../Components/Sign/register/register';
 import { Category } from '../Components/category/category';
+import { ProductDetails } from "../Components/Product/product-details/product-details";
 
 
 export const routes: Routes = [
@@ -14,5 +15,6 @@ export const routes: Routes = [
   {path:'login', component:Login},
   {path:'register', component:Register},
   {path:'category/:categoryName',component:Category},
+  {path:'product/:id', component:ProductDetails},
   {path: '**', component:Notfound}
 ];

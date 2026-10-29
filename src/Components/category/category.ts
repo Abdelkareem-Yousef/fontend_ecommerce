@@ -1,49 +1,30 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ChangeDetectorRef } from '@angular/core';
-
-interface product{
-    id:Number,
-    title:string
-    image:String,
-    description:string,
-    price:number,
-    category:String
-  }
+import { Product } from "../Product/product-card/product.model";
+import { ProductCard } from '../Product/product-card/product-card';
 
 @Component({
   selector: 'app-category',
-  imports: [],
+  imports: [ProductCard],
   templateUrl: './category.html',
   styleUrl: './category.css',
 })
 export class Category {
+  products: Product[] = [];
 
-    id:product[]=[];
+  constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
-  constructor(private x:HttpClient,private cdr:ChangeDetectorRef){}
-
-  get_product(){
-
-    this.x.get<product[]>("https://fakestoreapi.com/products").subscribe({
-      next:(result:any)=>{
-
-        this.id=result as product[];
-        this.cdr.detectChanges();
-        console.log("working")
-
-      },
-      error:(error:any)=>{
-        console.log("error")
-      },
-      complete:()=>{
-        console.log("done")
-      }
-
-    });
+  ngOnInit() {
+    this.get_product();
   }
 
-  ngOnInit(){
-    this.get_product();
+  get_product() {
+    this.http.get<Product[]>('https://fakestoreapi.com/products').subscribe({
+      next: (result) => {
+        this.products = result;
+        this.cdr.detectChanges();
+      },
+      error: (error) => console.log('error', error),
+    });
   }
 }
