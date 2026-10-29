@@ -1,9 +1,62 @@
-import { Component } from '@angular/core';
-
+import { Component, inject } from '@angular/core';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-register',
-  imports: [],
+  imports: [ReactiveFormsModule, FormsModule, RouterLink],
   templateUrl: './register.html',
   styleUrl: './register.css',
 })
-export class Register {}
+export class Register {
+
+  private FB=inject(FormBuilder)
+
+get f(){
+  return this.RegisterForm.controls
+}
+
+
+  RegisterForm=this.FB.group(
+    {
+      fullname:[
+          "",
+          [
+            Validators.required,
+            Validators.minLength(3)
+          ]
+        ],
+
+      email:[
+        "",[
+          Validators.email,
+          Validators.required
+        ]
+      ],
+      password:[
+          "",[
+            Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])/),
+            Validators.required,
+            Validators.minLength(8)
+
+          ]
+        ],
+        age:[
+          18,
+          [
+            Validators.required,
+            Validators.min(18)
+          ]
+        ]
+
+
+    }
+
+
+  )
+
+
+  onsubmit(){
+    console.log("you've succesfully signed up with the following details : ",this.RegisterForm.value);
+
+  }
+}
