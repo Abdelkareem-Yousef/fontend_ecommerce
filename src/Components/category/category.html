@@ -1,9 +1,13 @@
 <div class="container py-4">
+  <h2 class="mb-4 text-capitalize">{{ categoryName }}</h2>
+
   <div class="row g-4">
     @for (product of products; track product.id) {
       <div class="col-12 col-sm-6 col-md-4 col-lg-3">
         <app-product-card [product]="product" />
       </div>
+    } @empty {
+      <app-notfound />
     }
   </div>
 </div>
